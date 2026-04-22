@@ -1,26 +1,28 @@
-# ROS build
-catkin_ws/build/
-catkin_ws/devel/
-catkin_ws/install/
-catkin_ws/logs/
+# ROS / catkin generated
+svo_full_ws/build/
+svo_full_ws/devel/
+svo_full_ws/install/
+svo_full_ws/logs/
+svo_full_ws/.catkin_tools/
 
-# External repos
-catkin_ws/src/rpg_svo_pro_open/
-catkin_ws/src/svo_ros/
-catkin_ws/src/WildGS-SLAM/
-catkin_ws/src/wildgs-slam/
-catkin_ws/src/*wild*
+# Imported source dependencies
+svo_full_ws/src/catkin_simple/
+svo_full_ws/src/ceres_catkin/
+svo_full_ws/src/cmake_external_project_catkin/
+svo_full_ws/src/dbow2_catkin/
+svo_full_ws/src/eigen_catkin/
+svo_full_ws/src/eigen_checks/
+svo_full_ws/src/fast_neon/
+svo_full_ws/src/gflags_catkin/
+svo_full_ws/src/glog_catkin/
+svo_full_ws/src/minkindr/
+svo_full_ws/src/minkindr_ros/
+svo_full_ws/src/opengv/
+svo_full_ws/src/rpg_svo_pro_open/
+svo_full_ws/src/rpg_trajectory_evaluation/
 
-# Data and results
-datasets/
-results/
-logs/
-
-# Misc artifacts
+# Optional: downloaded vocabularies / large artifacts
 *.bag
-*.ply
-*.pcd
-*.png
-*.jpg
-*.jpeg
 *.zip
+*.tar.gz
+*.dbow2
