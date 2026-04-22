@@ -21,6 +21,9 @@ svo_full_ws/src/opengv/
 svo_full_ws/src/rpg_svo_pro_open/
 svo_full_ws/src/rpg_trajectory_evaluation/
 
+# external for scripts only
+external/
+
 # Optional: downloaded vocabularies / large artifacts
 *.bag
 *.zip
