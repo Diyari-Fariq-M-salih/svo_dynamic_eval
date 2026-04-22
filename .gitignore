@@ -1,0 +1,26 @@
+# ROS build
+catkin_ws/build/
+catkin_ws/devel/
+catkin_ws/install/
+catkin_ws/logs/
+
+# External repos
+catkin_ws/src/rpg_svo_pro_open/
+catkin_ws/src/svo_ros/
+catkin_ws/src/WildGS-SLAM/
+catkin_ws/src/wildgs-slam/
+catkin_ws/src/*wild*
+
+# Data and results
+datasets/
+results/
+logs/
+
+# Misc artifacts
+*.bag
+*.ply
+*.pcd
+*.png
+*.jpg
+*.jpeg
+*.zip
