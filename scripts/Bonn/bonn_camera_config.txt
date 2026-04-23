@@ -1,0 +1,30 @@
+cat > /workspaces/svo_dynamic_eval/svo_full_ws/src/rpg_svo_pro_open/svo_ros/param/calib/bonn_rgbd_640.yaml <<'EOF'
+cameras:
+- camera:
+    distortion:
+      parameters:
+        cols: 1
+        rows: 4
+        data: [0.039903, -0.099343, -0.000730, -0.000144]
+      type: radial-tangential
+    image_height: 480
+    image_width: 640
+    intrinsics:
+      cols: 1
+      rows: 4
+      data: [542.822841, 542.576870, 315.593520, 237.756098]
+    label: cam0
+    line-delay-nanoseconds: 0
+    type: pinhole
+  T_B_C:
+    cols: 4
+    rows: 4
+    data: [1., 0., 0., 0.,
+           0., 1., 0., 0.,
+           0., 0., 1., 0.,
+           0., 0., 0., 1.]
+  serial_no: 0
+  calib_date: 0
+  description: 'bonn_rgbd_640'
+label: bonn_rgbd_640
+EOF

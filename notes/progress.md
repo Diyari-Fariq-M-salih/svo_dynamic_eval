@@ -36,3 +36,33 @@
 - the command above shows image and IMU are handled in separate loops, so IMU is not inherently fused into the same subscriber.
 - grep -R "subscribeImu()" -n /workspaces/svo_dynamic_eval/svo_full_ws/src/rpg_svo_pro_open/svo_ros
 - the 2nd command shows that subscribeImu() is always called so to test Bonn/TUM/Wilds without IMU, we’ll need a small code or launch adaptation
+
+```bash
+F0423 06:37:14.194885  3699 frame.cpp:62] Check failed: img.cols == static_cast<int>(cam_->imageWidth()) (640 vs. 752) 
+*** Check failure stack trace: ***
+    @     0x7f048b289703  google::LogMessage::Fail()
+    @     0x7f048b28e4ab  google::LogMessage::SendToLog()
+    @     0x7f048b2893ff  google::LogMessage::Flush()
+    @     0x7f048b289c2f  google::LogMessageFatal::~LogMessageFatal()
+    @     0x7f048b318970  svo::Frame::initFrame()
+    @     0x7f048b318e33  svo::Frame::Frame()
+    @     0x7f048b568c78  svo::FrameHandlerBase::addImageBundle()
+    @     0x7f048bfb96be  svo::SvoInterface::processImageBundle()
+    @     0x7f048bfbc191  svo::SvoInterface::monoCallback()
+    @     0x7f047c0f024f  image_transport::RawSubscriber::internalCallback()
+    @     0x7f048b8d1162  boost::detail::function::void_function_obj_invoker1<>::invoke()
+    @     0x7f047c0f451d  ros::SubscriptionCallbackHelperT<>::call()
+    @     0x7f048c1d3549  ros::SubscriptionQueue::call()
+    @     0x7f048c181302  ros::CallbackQueue::callOneCB()
+    @     0x7f048c182d73  ros::CallbackQueue::callAvailable()
+    @     0x7f048bfbd5cb  svo::SvoInterface::monoLoop()
+    @     0x7f048be6adf4  (unknown)
+    @     0x7f048c02d609  start_thread
+    @     0x7f048bca6353  clone
+[svo-1] process has died [pid 3692, exit code -6, cmd /workspaces/svo_dynamic_eval/svo_full_ws/devel/.private/svo_ros/lib/svo_ros/svo_node --v=0 __name:=svo __log:=/root/.ros/log/97f934c0-3ede-11f1-b57b-f8ac6559bc1c/svo-1.log].
+log file: /root/.ros/log/97f934c0-3ede-11f1-b57b-f8ac6559bc1c/svo-1*.log
+all processes on machine have died, roslaunch will exit
+shutting down processing monitor...
+... shutting down processing monitor complete
+```
+- the output above shows that The Bonn RGB camera is documented as 640×480, need to make a seperate config.yaml for it

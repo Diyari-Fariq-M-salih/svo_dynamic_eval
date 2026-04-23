@@ -1,0 +1,13 @@
+docker exec -it svo_noetic bash
+python3 - <<'PY'
+import rosbag
+inbag = "/workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_balloon/svo_pose.bag"
+outtum = "/workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_balloon/traj_est.tum"
+with rosbag.Bag(inbag, 'r') as bag, open(outtum, 'w') as f:
+    for _, msg, _ in bag.read_messages(topics=['/svo/pose_cam/0']):
+        ts = msg.header.stamp.to_sec()
+        p = msg.pose.position
+        q = msg.pose.orientation
+        f.write(f"{ts:.9f} {p.x} {p.y} {p.z} {q.x} {q.y} {q.z} {q.w}\n")
+print("done")
+PY
