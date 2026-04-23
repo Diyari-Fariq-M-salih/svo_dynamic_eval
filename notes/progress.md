@@ -21,4 +21,12 @@
 - SVO achieved stable performance on EuRoC V2_01_easy with APE ≈ 0.1 m after initialization.
 - On EuRoC V2_02_medium, SVO remains operational but exhibits increased drift and reduced stability compared to the easy sequence, with APE rising to ~0.15–0.2 m given a playback speed of (0.5).
 - Under the current laptop + Docker setup, SVO becomes unstable on more dynamic EuRoC sequences at full playback rate, but remains usable at reduced playback speed (0.5), indicating sensitivity to motion dynamics and real-time compute constraints.
+- Performance degradation at full playback speed is primarily due to real-time processing limits, leading to frame drops and increased inter-frame motion, which negatively impacts tracking stability.
 #### vicon_room2 test medium and hard full playback
+## Key Findings:
+
+- Medium Difficulty: Consistently diverges ("flies into the void") at both 0.5x and 1.0x speeds.
+
+- Hard Difficulty: Surprisingly produces stable estimation results at 1.0x speed, despite initial assumptions that reduced playback speed (0.5x) would be required.
+
+- Corrected the previous testing assumption that hard difficulty would inherently perform worse than medium.
