@@ -1,0 +1,19 @@
+cat > /workspaces/svo_dynamic_eval/svo_full_ws/src/rpg_svo_pro_open/svo_ros/launch/mono_no_imu.launch <<'EOF'
+<launch>
+  <arg name="cam0_topic" default="/cam0/image_raw"/>
+  <arg name="calib_file" default="$(find svo_ros)/param/calib/svo_test_pinhole.yaml"/>
+  <arg name="use_rviz" default="false"/>
+
+  <node pkg="svo_ros" type="svo_node" name="svo" clear_params="true" output="screen" args="--v=0">
+    <param name="cam0_topic" value="$(arg cam0_topic)" type="str" />
+    <param name="calib_file" value="$(arg calib_file)" type="str" />
+
+    <rosparam file="$(find svo_ros)/param/pinhole.yaml" />
+
+    <param name="runlc" value="false" />
+  </node>
+
+  <node if="$(arg use_rviz)" name="vis" pkg="rviz" type="rviz"
+        args="-d $(find svo_ros)/rviz_config.rviz" />
+</launch>
+EOF

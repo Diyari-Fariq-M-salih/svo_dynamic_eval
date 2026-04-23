@@ -30,3 +30,9 @@
 - Hard Difficulty: Surprisingly produces stable estimation results at 1.0x speed, despite initial assumptions that reduced playback speed (0.5x) would be required.
 
 - Corrected the previous testing assumption that hard difficulty would inherently perform worse than medium.
+
+## No IMU patch
+- sed -n '430,530p' /workspaces/svo_dynamic_eval/svo_full_ws/src/rpg_svo_pro_open/svo_ros/src/svo_interface.cpp
+- the command above shows image and IMU are handled in separate loops, so IMU is not inherently fused into the same subscriber.
+- grep -R "subscribeImu()" -n /workspaces/svo_dynamic_eval/svo_full_ws/src/rpg_svo_pro_open/svo_ros
+- the 2nd command shows that subscribeImu() is always called so to test Bonn/TUM/Wilds without IMU, we’ll need a small code or launch adaptation
