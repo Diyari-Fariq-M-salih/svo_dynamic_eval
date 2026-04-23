@@ -1,0 +1,15 @@
+python3 - <<'PY'
+import rosbag
+
+inbag = "/workspaces/svo_dynamic_eval/results/svo/euroc/V2_02_medium/svo_pose.bag"
+outtum = "/workspaces/svo_dynamic_eval/results/svo/euroc/V2_02_medium/traj_est.tum"
+
+with rosbag.Bag(inbag, 'r') as bag, open(outtum, 'w') as f:
+    for topic, msg, t in bag.read_messages(topics=['/svo/pose_imu']):
+        ts = msg.header.stamp.to_sec()
+        p = msg.pose.pose.position
+        q = msg.pose.pose.orientation
+        f.write(f"{ts:.9f} {p.x} {p.y} {p.z} {q.x} {q.y} {q.z} {q.w}\n")
+
+print("done")
+PY

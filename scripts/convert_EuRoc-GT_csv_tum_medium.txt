@@ -1,0 +1,18 @@
+python3 - <<'PY'
+import csv
+
+incsv = "/workspaces/svo_dynamic_eval/external/euroc/vicon_room2/V2_02_medium/V2_02_medium/mav0/state_groundtruth_estimate0/data.csv"
+outtum = "/workspaces/svo_dynamic_eval/results/svo/euroc/V2_02_medium/traj_gt.tum"
+
+with open(incsv, 'r') as f, open(outtum, 'w') as g:
+    reader = csv.reader(f)
+    for row in reader:
+        if not row or row[0].startswith('#'):
+            continue
+        ts = float(row[0]) / 1e9
+        px, py, pz = row[1], row[2], row[3]
+        qw, qx, qy, qz = row[4], row[5], row[6], row[7]
+        g.write(f"{ts:.9f} {px} {py} {pz} {qx} {qy} {qz} {qw}\n")
+
+print("done")
+PY
