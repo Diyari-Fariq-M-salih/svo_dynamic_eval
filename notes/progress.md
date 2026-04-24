@@ -76,3 +76,16 @@ shutting down processing monitor...
 - for bonn crowd 2 SVO initialized but tracking stopped after approximately 1.2 seconds. Recorded only 39 pose messages on /svo/pose_cam/0. This sequence is treated as a tracking failure. APE evaluation is not considered meaningful due to insufficient trajectory length.
 
 - In moderately dynamic scenes (person tracking), SVO maintains stable tracking with moderate accuracy degradation (~0.33 m RMSE). However, performance is significantly worse than in static environments, confirming sensitivity to moving objects. SVO survives dynamics when enough static structure remains
+
+- final bonn sequence, rgbd_bonn_person_tracking2: Partial tracking only. SVO produced 91 pose messages over 3.1 s. Aligned APE RMSE = 0.022 m, but this is not representative of the full sequence. Status: partial / early tracking loss.
+
+## SVO Evaluation Results — Bonn Dataset (Aligned APE)
+
+| Sequence               | RMSE (m) | Status                              | Notes                                      |
+|-----------------------|----------|-------------------------------------|--------------------------------------------|
+| balloon               | ~0.16    | Good                                | Stable tracking, static scene              |
+| balloon2              | 0.127    | Very good                           | Best full-sequence performance             |
+| crowd                 | 0.535    | Degraded                            | Dynamic scene, drift increases             |
+| crowd2                | N/A      | Failed                              | Tracking lost after ~1.2 s                 |
+| person_tracking       | 0.332    | Moderate                            | Stable but affected by moving subject      |
+| person_tracking2      | 0.022    | Partial / Not representative         | Only 3.1 s tracked (91 poses), early loss  |
