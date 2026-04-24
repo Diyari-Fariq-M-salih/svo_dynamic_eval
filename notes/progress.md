@@ -105,3 +105,38 @@ shutting down processing monitor...
 | V2_01_easy       | 0.197            | 2.258             | Moderate      | Acceptable tracking, noticeable scale error    |
 | V2_02_medium     | 12167.356        | 15917.890         | Failed        | Complete divergence                            |
 | V2_03_difficult  | 0.187            | 1.847             | Moderate      | Stable tracking, moderate scale drift          |
+
+## with current commit and setup, use these commands to extract RMSE automatically from vicon and RGB_bonn repectively:
+```bash
+cd /workspaces/svo_dynamic_eval/results/svo/euroc
+
+for SEQ in V1_01_easy V1_02_medium V1_03_difficult \
+           V2_01_easy V2_02_medium V2_03_difficult; do
+  echo "=== $SEQ ==="
+  grep rmse $SEQ/ape_stats.txt 2>/dev/null
+  grep rmse ${SEQ}_no_align/ape_stats_no_align.txt 2>/dev/null
+  echo
+done
+```
+
+```bash
+cd /workspaces/svo_dynamic_eval/results/svo/bonn
+
+for SEQ in rgbd_bonn_balloon \
+           rgbd_bonn_balloon2 \
+           rgbd_bonn_crowd \
+           rgbd_bonn_crowd2 \
+           rgbd_bonn_person_tracking \
+           rgbd_bonn_person_tracking2; do
+
+  echo "=== $SEQ ==="
+
+  # aligned
+  grep rmse $SEQ/ape_stats.txt 2>/dev/null
+
+  # no-align
+  grep rmse ${SEQ}_no_align/ape_stats_no_align.txt 2>/dev/null
+
+  echo
+done
+```
