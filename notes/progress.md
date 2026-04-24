@@ -9,7 +9,7 @@
 - SVO verified functional (packages built, launch files available)
 
 
-## le 23 avril 2026 XX:XX
+## le 23 avril 2026 18:10
 
 - DATASET_ROOT=/workspaces/svo_dynamic_eval/external/WildGS-SLAM/scripts_downloading/datasets
 - rviz not working - X11 / permissions --> use xhost +local:root
@@ -66,3 +66,7 @@ shutting down processing monitor...
 ... shutting down processing monitor complete
 ```
 - the output above shows that The Bonn RGB camera is documented as 640×480, need to make a seperate config.yaml for it
+
+
+## le 24 avril 2026
+- Monocular SVO (no IMU) achieves ~0.12–0.16 m RMSE on Bonn ballon and ballon2 sequences, with stable tracking but expected sparse/low-quality mapping.
