@@ -72,3 +72,7 @@ shutting down processing monitor...
 - Monocular SVO (no IMU) achieves ~0.12–0.16 m RMSE on Bonn ballon and ballon2 sequences, with stable tracking but expected sparse/low-quality mapping.
 
 - for bonn crowd data, Without alignment, the estimated trajectory diverges significantly from the ground truth, reaching errors above 2 meters. While the motion remains locally smooth, the global trajectory is incorrect due to scale ambiguity and drift accumulation. Temporary error reductions are caused by incidental spatial proximity rather than true correction.
+
+- for bonn crowd 2 SVO initialized but tracking stopped after approximately 1.2 seconds. Recorded only 39 pose messages on /svo/pose_cam/0. This sequence is treated as a tracking failure. APE evaluation is not considered meaningful due to insufficient trajectory length.
+
+- In moderately dynamic scenes (person tracking), SVO maintains stable tracking with moderate accuracy degradation (~0.33 m RMSE). However, performance is significantly worse than in static environments, confirming sensitivity to moving objects. SVO survives dynamics when enough static structure remains
