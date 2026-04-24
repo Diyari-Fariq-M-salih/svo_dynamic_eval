@@ -79,17 +79,29 @@ shutting down processing monitor...
 
 - final bonn sequence, rgbd_bonn_person_tracking2: Partial tracking only. SVO produced 91 pose messages over 3.1 s. Aligned APE RMSE = 0.022 m, but this is not representative of the full sequence. Status: partial / early tracking loss.
 
-## SVO Evaluation Results — Bonn Dataset (Aligned APE)
+## SVO Evaluation — RGB-Bonn Dataset
 
-| Sequence               | RMSE (m) | Status                              | Notes                                      |
-|-----------------------|----------|-------------------------------------|--------------------------------------------|
-| balloon               | ~0.16    | Good                                | Stable tracking, static scene              |
-| balloon2              | 0.127    | Very good                           | Best full-sequence performance             |
-| crowd                 | 0.535    | Degraded                            | Dynamic scene, drift increases             |
-| crowd2                | N/A      | Failed                              | Tracking lost after ~1.2 s                 |
-| person_tracking       | 0.332    | Moderate                            | Stable but affected by moving subject      |
-| person_tracking2      | 0.022    | Partial / Not representative         | Only 3.1 s tracked (91 poses), early loss  |
+| Sequence                  | RMSE Aligned (m) | RMSE No Align (m) | Status        | Key Insight |
+|---------------------------|------------------|-------------------|--------------|-------------|
+| rgbd_bonn_balloon         | 0.161            | 2.558             | Successful    | Good tracking, clear scale drift        |
+| rgbd_bonn_balloon2        | 0.127            | 2.611             | Successful    | Strong relative accuracy                |
+| rgbd_bonn_crowd           | 0.535            | 2.148             | Degraded      | Dynamic scene affects tracking          |
+| rgbd_bonn_crowd2          | 0.020            | 2.170             | Misleading    | Very short trajectory, not representative |
+| rgbd_bonn_person_tracking | 0.332            | 2.302             | Moderate      | Motion introduces instability           |
+| rgbd_bonn_person_tracking2| 0.022            | 2.084             | Misleading    | Partial tracking (~3s), artificially low RMSE |
 
 ## Automation scripts
 - after tests were done and pipeline became familiar, automation scripts were created, in both scripts/Bonn and scripts/EuRoc - for both aligned and non aligned results. 
 - for redundancy, vicon_room1 was installed and tested using automated scripts, as expected, when IMU data is given, results become more stable
+
+
+## SVO Evaluation — EuRoC Vicon Room 1 & 2
+
+| Sequence           | RMSE Aligned (m) | RMSE No Align (m) | Status        | Key Insight |
+|------------------|------------------|-------------------|--------------|-------------|
+| V1_01_easy       | 0.050            | 3.998             | Successful    | Excellent relative tracking, large scale drift |
+| V1_02_medium     | 0.124            | 3.655             | Successful    | Stable but increasing drift                    |
+| V1_03_difficult  | 0.118            | 3.350             | Successful    | Robust but slightly degraded accuracy          |
+| V2_01_easy       | 0.197            | 2.258             | Moderate      | Acceptable tracking, noticeable scale error    |
+| V2_02_medium     | 12167.356        | 15917.890         | Failed        | Complete divergence                            |
+| V2_03_difficult  | 0.187            | 1.847             | Moderate      | Stable tracking, moderate scale drift          |
