@@ -15,10 +15,11 @@ roscore
 ```
 #### terminal 2 SVO mono without IMU:
 ```bash
-docker exec -it svo_noetic bash
 source /opt/ros/noetic/setup.bash
 source /workspaces/svo_dynamic_eval/svo_full_ws/devel/setup.bash
-roslaunch svo_ros mono_no_imu.launch calib_file:=/workspaces/svo_dynamic_eval/svo_full_ws/src/rpg_svo_pro_open/svo_ros/param/calib/bonn_rgbd_640.yaml
+
+roslaunch svo_ros mono_no_imu.launch \
+calib_file:=/workspaces/svo_dynamic_eval/svo_full_ws/src/rpg_svo_pro_open/svo_ros/param/calib/bonn_rgbd_640.yaml
 ```
 #### terminal before 3 and after 2 ( if using rivz ):
 ```bash
@@ -37,21 +38,23 @@ ls /tmp/.X11-unix
 ```
 #### terminal 3 record, ctrl+c after bag finishes playing:
 ```bash
-docker exec -it svo_noetic bash
 source /opt/ros/noetic/setup.bash
-mkdir -p /workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_balloon
-rosbag record -O /workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_balloon/svo_pose.bag /svo/pose_cam/0
+
+mkdir -p /workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_crowd
+
+rosbag record -O /workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_crowd/svo_pose.bag \
+/svo/pose_cam/0
 ```
 #### terminal 4 publish Bonn RGB sequence:
 ```bash
-docker exec -it svo_noetic bash
 source /opt/ros/noetic/setup.bash
+
 python3 - <<'PY'
 import os, time, cv2, rospy
 from cv_bridge import CvBridge
 from sensor_msgs.msg import Image
 
-seq = "/workspaces/svo_dynamic_eval/external/WildGS-SLAM/scripts_downloading/datasets/Bonn/rgbd_bonn_balloon"
+seq = "/workspaces/svo_dynamic_eval/external/WildGS-SLAM/scripts_downloading/datasets/Bonn/rgbd_bonn_crowd"
 rgb_txt = os.path.join(seq, "rgb.txt")
 
 rospy.init_node("bonn_rgb_player")
@@ -105,29 +108,18 @@ PY
 - pose  bag to tum
 - ground truth is already provided in tum
 
-#### run APE
+#### stats
 ```bash
-docker exec -it svo_noetic bash
 evo_ape tum \
-/workspaces/svo_dynamic_eval/external/WildGS-SLAM/scripts_downloading/datasets/Bonn/rgbd_bonn_balloon/groundtruth.txt \
-/workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_balloon/traj_est.tum \
--a
+/workspaces/svo_dynamic_eval/external/WildGS-SLAM/scripts_downloading/datasets/Bonn/rgbd_bonn_crowd/groundtruth.txt \
+/workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_crowd/traj_est.tum \
+-a > /workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_crowd/ape_stats.txt
 ```
 
-#### save stats
+#### plots
 ```bash
-docker exec -it svo_noetic bash
 evo_ape tum \
-/workspaces/svo_dynamic_eval/external/WildGS-SLAM/scripts_downloading/datasets/Bonn/rgbd_bonn_balloon/groundtruth.txt \
-/workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_balloon/traj_est.tum \
--a > /workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_balloon/ape_stats.txt
-```
-
-#### save plots
-```bash
-docker exec -it svo_noetic bash
-evo_ape tum \
-/workspaces/svo_dynamic_eval/external/WildGS-SLAM/scripts_downloading/datasets/Bonn/rgbd_bonn_balloon/groundtruth.txt \
-/workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_balloon/traj_est.tum \
--a --plot --save_plot /workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_balloon/ape_plot.png
+/workspaces/svo_dynamic_eval/external/WildGS-SLAM/scripts_downloading/datasets/Bonn/rgbd_bonn_crowd/groundtruth.txt \
+/workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_crowd/traj_est.tum \
+-a --plot --save_plot /workspaces/svo_dynamic_eval/results/svo/bonn/rgbd_bonn_crowd/ape_plot.png
 ```

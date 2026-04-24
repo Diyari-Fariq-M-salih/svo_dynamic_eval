@@ -70,3 +70,4 @@ shutting down processing monitor...
 
 ## le 24 avril 2026
 - Monocular SVO (no IMU) achieves ~0.12–0.16 m RMSE on Bonn ballon and ballon2 sequences, with stable tracking but expected sparse/low-quality mapping.
+
