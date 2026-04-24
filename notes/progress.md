@@ -89,3 +89,7 @@ shutting down processing monitor...
 | crowd2                | N/A      | Failed                              | Tracking lost after ~1.2 s                 |
 | person_tracking       | 0.332    | Moderate                            | Stable but affected by moving subject      |
 | person_tracking2      | 0.022    | Partial / Not representative         | Only 3.1 s tracked (91 poses), early loss  |
+
+## Automation scripts
+- after tests were done and pipeline became familiar, automation scripts were created, in both scripts/Bonn and scripts/EuRoc - for both aligned and non aligned results. 
+- for redundancy, vicon_room1 was installed and tested using automated scripts, as expected, when IMU data is given, results become more stable
