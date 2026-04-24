@@ -66,6 +66,7 @@ Alignment may reduce apparent error, especially in monocular SLAM
 - Maximum error
 - Standard deviation
 
+### Extra notes
 - Monocular SVO does not estimate true scale.
 - Alignment compensates for this limitation.
 - Short or failed trajectories may produce misleadingly low RMSE values.
