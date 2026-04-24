@@ -1,0 +1,11 @@
+APE w.r.t. translation part (m)
+(not aligned)
+
+       max	2.696482
+      mean	2.610272
+    median	2.629262
+       min	2.453513
+      rmse	2.610937
+       sse	1281.594158
+       std	0.058922
+
