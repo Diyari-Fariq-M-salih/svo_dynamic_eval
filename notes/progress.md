@@ -71,3 +71,4 @@ shutting down processing monitor...
 ## le 24 avril 2026
 - Monocular SVO (no IMU) achieves ~0.12–0.16 m RMSE on Bonn ballon and ballon2 sequences, with stable tracking but expected sparse/low-quality mapping.
 
+- for bonn crowd data, Without alignment, the estimated trajectory diverges significantly from the ground truth, reaching errors above 2 meters. While the motion remains locally smooth, the global trajectory is incorrect due to scale ambiguity and drift accumulation. Temporary error reductions are caused by incidental spatial proximity rather than true correction.
