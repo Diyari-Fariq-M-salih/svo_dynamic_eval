@@ -8,7 +8,15 @@ DATA_ROOT=/workspaces/svo_dynamic_eval/external/WildGS-SLAM/scripts_downloading/
 OUT_ROOT=/workspaces/svo_dynamic_eval/results/svo/tum_rgbd
 
 SEQS=(
+  rgbd_dataset_freiburg2_desk_with_person
+  rgbd_dataset_freiburg3_sitting_halfsphere
+  rgbd_dataset_freiburg3_sitting_rpy
   rgbd_dataset_freiburg3_sitting_static
+  rgbd_dataset_freiburg3_sitting_xyz
+  rgbd_dataset_freiburg3_walking_halfsphere
+  rgbd_dataset_freiburg3_walking_rpy
+  rgbd_dataset_freiburg3_walking_static
+  rgbd_dataset_freiburg3_walking_xyz
 )
 
 for SEQ in "${SEQS[@]}"; do
