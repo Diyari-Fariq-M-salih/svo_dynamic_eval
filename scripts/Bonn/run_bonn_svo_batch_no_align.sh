@@ -15,6 +15,8 @@ SEQS=(
   rgbd_bonn_crowd2
   rgbd_bonn_person_tracking
   rgbd_bonn_person_tracking2
+  rgbd_bonn_moving_nonobstructing_box
+  rgbd_bonn_moving_nonobstructing_box2
 )
 
 for SEQ in "${SEQS[@]}"; do
