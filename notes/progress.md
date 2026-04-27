@@ -140,3 +140,46 @@ for SEQ in rgbd_bonn_balloon \
   echo
 done
 ```
+
+## le 27 avril 2026
+- validated a pipeline for tum_rgbd, continuing tests.
+
+## SVO Evaluation — TUM RGB-D
+
+| Sequence                                      | RMSE Aligned (m) | RMSE No Align (m) | Status        | Key Insight |
+|-----------------------------------------------|------------------|-------------------|--------------|-------------|
+| rgbd_dataset_freiburg2_desk_with_person       | 0.730            | 2.238             | Moderate     | Dynamic scene degrades tracking stability |
+| rgbd_dataset_freiburg3_sitting_halfsphere     | 0.308            | 2.821             | Moderate     | Smooth motion but noticeable drift |
+| rgbd_dataset_freiburg3_sitting_rpy            | 0.055            | 3.156             | Successful   | Strong local tracking, large global offset |
+| rgbd_dataset_freiburg3_sitting_static         | 0.035            | 3.403             | Successful   | Very stable, near-ideal static performance |
+| rgbd_dataset_freiburg3_sitting_xyz            | 0.182            | 3.381             | Moderate     | Translation motion increases drift |
+| rgbd_dataset_freiburg3_walking_halfsphere     | 0.475            | 3.082             | Moderate     | Dynamic motion reduces accuracy |
+| rgbd_dataset_freiburg3_walking_rpy            | 0.075            | 3.112             | Successful   | Robust tracking despite rotation |
+| rgbd_dataset_freiburg3_walking_static         | 0.017            | 3.625             | Successful   | Best-case tracking, minimal relative error |
+| rgbd_dataset_freiburg3_walking_xyz            | 0.249            | 3.370             | Moderate     | Drift accumulates with translational motion |
+
+- SVO achieves high relative accuracy (<5 cm) in controlled/static scenes, but consistently exhibits large global drift (~3 m) due to monocular scale ambiguity.
+
+- In current commit, use the following command in bash to extract the results from tum_rgbd automated scripts
+
+```bash
+cd /workspaces/svo_dynamic_eval/results/svo/tum_rgbd
+
+for SEQ in rgbd_dataset_freiburg2_desk_with_person \
+           rgbd_dataset_freiburg3_sitting_halfsphere \
+           rgbd_dataset_freiburg3_sitting_rpy \
+           rgbd_dataset_freiburg3_sitting_static \
+           rgbd_dataset_freiburg3_sitting_xyz \
+           rgbd_dataset_freiburg3_walking_halfsphere \
+           rgbd_dataset_freiburg3_walking_rpy \
+           rgbd_dataset_freiburg3_walking_static \
+           rgbd_dataset_freiburg3_walking_xyz; do
+
+  echo "=== $SEQ ==="
+
+  grep rmse $SEQ/ape_stats.txt 2>/dev/null
+  grep rmse ${SEQ}_no_align/ape_stats_no_align.txt 2>/dev/null
+
+  echo
+done
+```
