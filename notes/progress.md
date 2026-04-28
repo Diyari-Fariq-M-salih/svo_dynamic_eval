@@ -183,3 +183,48 @@ for SEQ in rgbd_dataset_freiburg2_desk_with_person \
   echo
 done
 ```
+
+## le 28 avril 2026
+- Wilds data set failed to run, fundmentally different from last datasets, has JSON and no yaml, camera config is different, from intrinsics.json we get:
+```JSON
+width: 1280
+height: 720
+fx: 647.2167
+fy: 646.4154
+cx: 643.1209
+cy: 365.5596
+coeffs: [-0.0550, 0.0656, -0.0005, 0.00047, -0.0217]
+```
+- SVO expects 4 distortion params, but we have 5
+- generated svo_full_ws/src/rpg_svo_pro_open/svo_ros/param/calib/wild_rgbd_1280x720.yaml:
+```yaml
+cameras:
+- camera:
+    distortion:
+      parameters:
+        cols: 1
+        rows: 4
+        data: [-0.05501496, 0.06560786, -0.00050613, 0.00047713]
+      type: radial-tangential
+    image_height: 720
+    image_width: 1280
+    intrinsics:
+      cols: 1
+      rows: 4
+      data: [647.2167, 646.4155, 643.1210, 365.5596]
+    label: cam0
+    line-delay-nanoseconds: 0
+    type: pinhole
+  T_B_C:
+    cols: 4
+    rows: 4
+    data: [1., 0., 0., 0.,
+           0., 1., 0., 0.,
+           0., 0., 1., 0.,
+           0., 0., 0., 1.]
+  serial_no: 0
+  calib_date: 0
+  description: 'wild_rgbd_1280x720'
+label: wild_rgbd_1280x720
+
+```
