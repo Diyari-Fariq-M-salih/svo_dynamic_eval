@@ -226,5 +226,49 @@ cameras:
   calib_date: 0
   description: 'wild_rgbd_1280x720'
 label: wild_rgbd_1280x720
+```
+- Created run_wild_svo_batch.sh, both aligned and non aligned run in the same script to reduce file redundancy, as well as:
+- - aligned RMSE
+- - no-align RMSE
+- - raw/map plots saved automatically
+- - all sequences under scene1/* and scene2/*
+- - automatic YAML generation from each intrinsics.json
+- Wild_SLAM_Mocap is much harder than TUM/Bonn. SVO still tracks most sequences, but aligned RMSE rises to ~0.4–1.5 m, showing that real-world dynamics and non-controlled motion significantly degrade accuracy.
 
+## SVO Evaluation — Wild_SLAM_Mocap
+
+| Sequence | Poses | RMSE Aligned (m) | RMSE No Align (m) | Status | Key Insight |
+|---|---:|---:|---:|---|---|
+| scene1_table_tracking1 | 531 | 1.162 | 2.423 | Poor | Significant drift despite successful tracking |
+| scene1_ball | 924 | 0.771 | 2.365 | Moderate | Real-world object motion degrades accuracy |
+| scene1_table_tracking2 | 322 | 0.777 | 2.611 | Moderate | Shorter tracking, moderate trajectory error |
+| scene1_umbrella | 447 | 0.440 | 2.860 | Moderate | Best Wild result, still worse than TUM/Bonn |
+| scene1_crowd | 1244 | 0.845 | 2.673 | Poor | Dynamic crowd scene reduces reliability |
+| scene1_person_tracking | 978 | 1.453 | 3.500 | Failed/Poor | Strong dynamic subject causes major degradation |
+| scene1_stones | 941 | 0.595 | 2.803 | Moderate | Tracks but retains substantial drift |
+| scene1_racket | 951 | 1.192 | 2.813 | Poor | Fast/dynamic object motion hurts tracking |
+| scene2_ANYmal1 | 644 | 0.633 | 3.233 | Moderate | Robot motion/general scene still challenging |
+| scene2_ANYmal2 | 1168 | 1.509 | 2.171 | Failed/Poor | High aligned error despite many poses |
+
+- in current commit, use the following to echo out the RMSE for wilds_rgbd:
+```bash
+cd /workspaces/svo_dynamic_eval/results/svo/wild_slam_mocap
+
+for SEQ in scene1_table_tracking1 \
+           scene1_ball \
+           scene1_table_tracking2 \
+           scene1_umbrella \
+           scene1_crowd \
+           scene1_person_tracking \
+           scene1_stones \
+           scene1_racket \
+           scene2_ANYmal1 \
+           scene2_ANYmal2; do
+  echo "=== $SEQ ==="
+  echo -n "poses: "
+  cat "$SEQ/converted_poses.txt" 2>/dev/null || echo "NA"
+  grep rmse "$SEQ/ape_stats.txt" 2>/dev/null
+  grep rmse "$SEQ/ape_stats_no_align.txt" 2>/dev/null
+  echo
+done
 ```
