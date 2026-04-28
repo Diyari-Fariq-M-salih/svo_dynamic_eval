@@ -235,7 +235,7 @@ label: wild_rgbd_1280x720
 - - automatic YAML generation from each intrinsics.json
 - Wild_SLAM_Mocap is much harder than TUM/Bonn. SVO still tracks most sequences, but aligned RMSE rises to ~0.4–1.5 m, showing that real-world dynamics and non-controlled motion significantly degrade accuracy.
 
-## SVO Evaluation — Wild_SLAM_Mocap
+## SVO Evaluation || Wild_SLAM_Mocap
 
 | Sequence | Poses | RMSE Aligned (m) | RMSE No Align (m) | Status | Key Insight |
 |---|---:|---:|---:|---|---|
@@ -272,3 +272,67 @@ for SEQ in scene1_table_tracking1 \
   echo
 done
 ```
+
+## Experimental Conclusion
+
+| Dataset              | Conditions            | Result                |
+| -------------------- | --------------------- | --------------------- |
+| **EuRoC (with IMU)** | controlled + inertial | best stability        |
+| **TUM RGB-D**        | controlled, no IMU    | very accurate locally |
+| **Bonn**             | semi-dynamic          | moderate degradation  |
+| **Wild (MoCap)**     | real-world dynamic    | strong degradation    |
+
+### aligned RMSE trend
+```
+EuRoC      → ~0.05–0.2 m
+TUM        → ~0.02–0.3 m
+Bonn       → ~0.1–0.5 m
+Wild       → ~0.4–1.5 m
+```
+- As scene realism and dynamics increase, monocular SVO accuracy degrades significantly.
+### non aligned RMSE trend
+```
+~2–4 meters across ALL datasets
+```
+- Scale drift is independent of dataset type, So:
+
+- not caused by dynamics
+- not caused by calibration
+- not caused by noise
+- this is monocular scale ambiguity
+
+### Bottlenecks of SVO
+```
+A. No IMU → scale drift
+proven across all datasets
+
+B. Dynamic scenes → feature corruption
+Bonn + Wild confirm this
+
+C. Real-world conditions → accuracy collapse
+Wild dataset clearly shows this
+
+D. Camera model limitations
+mismatch (5 coeffs → 4 coeffs)
+contributes to Wild degradation
+
+conclusion: SVO does not generalize well to real-world dynamic environments
+```
+
+### Subtle pose count insight
+- From data logs, high pose count BUT high error, ergo Tracking != accuracy, SVO keeps tracking, but drifts and misestimates
+
+## Comparison with SVO Paper
+
+| Metric | SVO Paper | Our Results |
+|-------|----------|------------|
+| Relative Drift | ~0.005 m/s | (not computed) |
+| Scale Drift | up to 8% | visible (high no-align RMSE) |
+| Aligned RMSE | low | low (0.02–0.5 m) |
+| Non-aligned RMSE | high | high (2–4 m) |
+| Trajectory Shape | correct | correct |
+
+The behavior of our system is consistent with the original SVO paper. While absolute trajectory error appears high without alignment, the relative motion estimation is accurate, as confirmed by the similarity in trajectory shape and reduced error after alignment. This matches the expected scale drift and lack of global consistency in monocular visual odometry.
+
+### One paragraph summary
+Monocular SVO achieves high relative accuracy in controlled environments, but its performance degrades systematically with increasing scene dynamics and realism. While tracking remains operational in most cases, absolute accuracy deteriorates due to scale ambiguity, motion complexity, and model limitations. Monocular SVO accurately captures relative motion, but fails to maintain global consistency. which is what sim(3) alignment tries to fix.
