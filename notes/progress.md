@@ -343,7 +343,7 @@ Monocular SVO achieves high relative accuracy in controlled environments, but it
 - for now, will convert all past results, in RGB, to use SIM3 alignment
 - noticeable results were observed with Bonn dataset, but not much in vicon rooms 1 and 2
 ```bash
-for SEQ in rgbd_bonn_balloon rgbd_bonn_balloon2 rgbd_bonn_crowd rgbd_bonn_crowd2 rgbd_bonn_person_tracking rgbd_bonn_person_tracking2; do
+for SEQ in rgbd_bonn_balloon rgbd_bonn_balloon2 rgbd_bonn_crowd rgbd_bonn_crowd2 rgbd_bonn_person_tracking rgbd_bonn_person_tracking2 rgbd_bonn_moving_nonobstructing_box rgbd_bonn_moving_nonobstructing_box2; do
   echo "=== $SEQ ==="
   grep rmse $SEQ/ape_stats_sim3.txt 2>/dev/null
 done
@@ -361,6 +361,10 @@ done
       rmse	0.203751
 === rgbd_bonn_person_tracking2 ===
       rmse	0.010634
+=== rgbd_bonn_moving_nonobstructing_box ===
+      rmse	0.165527
+=== rgbd_bonn_moving_nonobstructing_box2 ===
+      rmse	0.118087
 ```
 
 ```bash
@@ -383,3 +387,139 @@ done
 === V2_03_difficult ===
       rmse	0.185936
 ```
+
+- for tum_rgbd(only RGB) a few improvments were noted, but some displayed erratic trajectory estimation, while an overall good improvment was noted on wilds_mocap as trajectory is now similar in shape and scale to GT.
+```bash
+ for SEQ in rgbd_dataset_*; do
+   [[ "$SEQ" == *_no_align ]] && continue
+   echo "=== $SEQ ==="
+   grep rmse "$SEQ/ape_stats_sim3.txt" 2>/dev/null
+ done
+```
+```bash
+=== rgbd_dataset_freiburg2_desk_with_person ===
+      rmse	0.161231
+=== rgbd_dataset_freiburg3_sitting_halfsphere ===
+      rmse	0.291279
+=== rgbd_dataset_freiburg3_sitting_rpy ===
+      rmse	0.051200
+=== rgbd_dataset_freiburg3_sitting_static ===
+      rmse	0.022206
+=== rgbd_dataset_freiburg3_sitting_xyz ===
+      rmse	0.069196
+=== rgbd_dataset_freiburg3_walking_halfsphere ===
+      rmse	0.272714
+=== rgbd_dataset_freiburg3_walking_rpy ===
+      rmse	0.025249
+=== rgbd_dataset_freiburg3_walking_static ===
+      rmse	0.007983
+=== rgbd_dataset_freiburg3_walking_xyz ===
+      rmse	0.037622
+```
+```bash
+ for SEQ in *; do
+   [ -d "$SEQ" ] || continue
+   [[ "$SEQ" == *_no_align ]] && continue
+   echo "=== $SEQ ==="
+   grep rmse "$SEQ/ape_stats_sim3.txt" 2>/dev/null
+ done
+```
+```bash
+=== scene1_ball ===
+      rmse	0.025812
+=== scene1_crowd ===
+      rmse	0.028433
+=== scene1_person_tracking ===
+      rmse	0.021456
+=== scene1_racket ===
+      rmse	0.063181
+=== scene1_stones ===
+      rmse	0.305035
+=== scene1_table_tracking1 ===
+      rmse	0.118859
+=== scene1_table_tracking2 ===
+      rmse	0.149250
+=== scene1_umbrella ===
+      rmse	0.088828
+=== scene2_ANYmal1 ===
+      rmse	0.116836
+=== scene2_ANYmal2 ===
+      rmse	1.137936
+``` for SEQ in rgbd_dataset_*; do
+```
+
+## SVO Evaluation, Sim(3) Alignment (All Datasets)
+
+| Dataset   | Sequence                     | RMSE Sim(3) (m) | Status     | Key Insight                                      |
+| --------- | ---------------------------- | --------------- | ---------- | ------------------------------------------------ |
+| **Bonn**  | rgbd_bonn_balloon            | 0.112           | Successful | Scale correction significantly improves accuracy |
+| **Bonn**  | rgbd_bonn_balloon2           | 0.100           | Successful | Stable tracking with corrected scale             |
+| **Bonn**  | rgbd_bonn_crowd              | 0.066           | Successful | Handles dynamic scene after scaling              |
+| **Bonn**  | rgbd_bonn_crowd2             | 0.002           | Ideal      | Near-perfect trajectory reconstruction           |
+| **Bonn**  | rgbd_bonn_person_tracking    | 0.204           | Moderate   | Dynamic subject introduces residual error        |
+| **Bonn**  | rgbd_bonn_person_tracking2   | 0.011           | Excellent  | Strong scale + trajectory recovery               |
+| **Bonn**  | rgbd_bonn_moving_nonobstructing_box    | 0.166           | Moderate   | Minor improvment       |
+| **Bonn**  | rgbd_bonn_moving_nonobstructing_box2   | 0.118           | Successful  | Good scale recovery               |
+| **EuRoC** | V1_01_easy                   | 0.049           | Successful | IMU already stabilizes scale                     |
+| **EuRoC** | V1_02_medium                 | 0.124           | Successful | Minimal improvement vs SE(3)                     |
+| **EuRoC** | V1_03_difficult              | 0.118           | Successful | Stable performance maintained                    |
+| **EuRoC** | V2_01_easy                   | 0.192           | Moderate   | Slight improvement only                          |
+| **EuRoC** | V2_02_medium                 | 2.256           | Failed     | Divergence persists                              |
+| **EuRoC** | V2_03_difficult              | 0.186           | Moderate   | Limited benefit from Sim(3)                      |
+| **TUM**   | freiburg2_desk_with_person   | 0.161           | Moderate   | Dynamic scene still affects accuracy             |
+| **TUM**   | freiburg3_sitting_halfsphere | 0.291           | Moderate   | Smooth motion but drift remains                  |
+| **TUM**   | freiburg3_sitting_rpy        | 0.051           | Successful | Strong rotational tracking                       |
+| **TUM**   | freiburg3_sitting_static     | 0.022           | Excellent  | Near-ideal static performance                    |
+| **TUM**   | freiburg3_sitting_xyz        | 0.069           | Successful | Stable translation tracking                      |
+| **TUM**   | freiburg3_walking_halfsphere | 0.273           | Moderate   | Dynamic motion reduces accuracy                  |
+| **TUM**   | freiburg3_walking_rpy        | 0.025           | Excellent  | Robust under rotation                            |
+| **TUM**   | freiburg3_walking_static     | 0.008           | Ideal      | Best-case tracking scenario                      |
+| **TUM**   | freiburg3_walking_xyz        | 0.038           | Successful | Good trajectory consistency                      |
+| **Wild**  | scene1_ball                  | 0.026           | Excellent  | Strong recovery of real-world trajectory         |
+| **Wild**  | scene1_crowd                 | 0.028           | Excellent  | Scale + shape corrected effectively              |
+| **Wild**  | scene1_person_tracking       | 0.021           | Excellent  | Large improvement vs SE(3)                       |
+| **Wild**  | scene1_racket                | 0.063           | Successful | Fast motion still affects precision              |
+| **Wild**  | scene1_stones                | 0.305           | Moderate   | Difficult texture + motion                       |
+| **Wild**  | scene1_table_tracking1       | 0.119           | Moderate   | Residual drift persists                          |
+| **Wild**  | scene1_table_tracking2       | 0.149           | Moderate   | Short trajectory instability                     |
+| **Wild**  | scene1_umbrella              | 0.089           | Successful | Good reconstruction                              |
+| **Wild**  | scene2_ANYmal1               | 0.117           | Moderate   | Complex robot motion                             |
+| **Wild**  | scene2_ANYmal2               | 1.138           | Failed     | Severe degradation                               |
+
+## SE(3) vs Sim(3) Comparison
+
+| Dataset   | Sequence            | SE(3) RMSE (m) | Sim(3) RMSE (m) | Improvement (%) | Insight                   |
+| --------- | ------------------- | -------------- | --------------- | --------------- | ------------------------- |
+| **Bonn**  | balloon             | 0.161          | 0.112           | **30.6%**       | Clear scale correction    |
+| Bonn      | balloon2            | 0.127          | 0.100           | **21.6%**       | Moderate improvement      |
+| Bonn      | crowd               | 0.535          | 0.066           | **87.7%**       | Dynamic drift corrected   |
+| Bonn      | crowd2              | 0.020          | 0.002           | **90.0%**       | Short traj, inflated gain |
+| Bonn      | person_tracking     | 0.332          | 0.204           | **38.6%**       | Dynamics still hurt       |
+| Bonn      | person_tracking2    | 0.022          | 0.011           | **51.8%**       | Partial traj benefit      |
+| **Bonn** | nonobstructing_box  | 0.222          | 0.166           | **25.3%**       | Moderate scale correction             |
+| **Bonn** | nonobstructing_box2 | 0.446          | 0.118           | **73.5%**       | Strong improvement, large scale drift |
+| **EuRoC** | V1_01_easy          | 0.050          | 0.049           | **1.8%**        | Already scale-consistent  |
+| EuRoC     | V1_02_medium        | 0.124          | 0.124           | **0.4%**        | No real change            |
+| EuRoC     | V1_03_difficult     | 0.118          | 0.118           | ~0%             | Identical                 |
+| EuRoC     | V2_01_easy          | 0.197          | 0.192           | **2.4%**        | Minimal gain              |
+| EuRoC     | V2_02_medium        | 12167          | 2.256           | **~99.98%**     | Artificial (failure case) |
+| EuRoC     | V2_03_difficult     | 0.187          | 0.186           | **0.6%**        | Negligible                |
+| **TUM**   | desk_with_person    | 0.730          | 0.161           | **77.9%**       | Strong correction         |
+| TUM       | sitting_halfsphere  | 0.308          | 0.291           | **5.4%**        | Minor                     |
+| TUM       | sitting_rpy         | 0.055          | 0.051           | **6.9%**        | Small gain                |
+| TUM       | sitting_static      | 0.035          | 0.022           | **36.6%**       | Static improves           |
+| TUM       | sitting_xyz         | 0.182          | 0.069           | **62.0%**       | Translation corrected     |
+| TUM       | walking_halfsphere  | 0.475          | 0.273           | **42.6%**       | Dynamic gain              |
+| TUM       | walking_rpy         | 0.075          | 0.025           | **66.3%**       | Strong correction         |
+| TUM       | walking_static      | 0.017          | 0.008           | **53.1%**       | Ideal case                |
+| TUM       | walking_xyz         | 0.249          | 0.038           | **84.9%**       | Large improvement         |
+| **Wild**  | table_tracking1     | 1.162          | 0.119           | **89.8%**       | Huge correction           |
+| Wild      | ball                | 0.771          | 0.026           | **96.7%**       | Near-perfect              |
+| Wild      | table_tracking2     | 0.777          | 0.149           | **80.8%**       | Strong gain               |
+| Wild      | umbrella            | 0.440          | 0.089           | **79.8%**       | Consistent                |
+| Wild      | crowd               | 0.845          | 0.028           | **96.6%**       | Major improvement         |
+| Wild      | person_tracking     | 1.453          | 0.021           | **98.5%**       | Massive correction        |
+| Wild      | stones              | 0.595          | 0.305           | **48.7%**       | Hard case                 |
+| Wild      | racket              | 1.192          | 0.063           | **94.7%**       | Strong gain               |
+| Wild      | ANYmal1             | 0.633          | 0.117           | **81.5%**       | Good recovery             |
+| Wild      | ANYmal2             | 1.509          | 1.138           | **24.6%**       | Limited improvement       |
