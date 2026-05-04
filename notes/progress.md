@@ -336,3 +336,50 @@ The behavior of our system is consistent with the original SVO paper. While abso
 
 ### One paragraph summary
 Monocular SVO achieves high relative accuracy in controlled environments, but its performance degrades systematically with increasing scene dynamics and realism. While tracking remains operational in most cases, absolute accuracy deteriorates due to scale ambiguity, motion complexity, and model limitations. Monocular SVO accurately captures relative motion, but fails to maintain global consistency. which is what sim(3) alignment tries to fix.
+
+## le 5 mai 2026
+- under supervisor feedvack, will change from SE3 to SIM3 alignment
+- current SVO repo does not contain RGB-D file to use, which is the next step of testing
+- for now, will convert all past results, in RGB, to use SIM3 alignment
+- noticeable results were observed with Bonn dataset, but not much in vicon rooms 1 and 2
+```bash
+for SEQ in rgbd_bonn_balloon rgbd_bonn_balloon2 rgbd_bonn_crowd rgbd_bonn_crowd2 rgbd_bonn_person_tracking rgbd_bonn_person_tracking2; do
+  echo "=== $SEQ ==="
+  grep rmse $SEQ/ape_stats_sim3.txt 2>/dev/null
+done
+```
+```bash
+=== rgbd_bonn_balloon ===
+      rmse	0.111795
+=== rgbd_bonn_balloon2 ===
+      rmse	0.099591
+=== rgbd_bonn_crowd ===
+      rmse	0.065953
+=== rgbd_bonn_crowd2 ===
+      rmse	0.002001
+=== rgbd_bonn_person_tracking ===
+      rmse	0.203751
+=== rgbd_bonn_person_tracking2 ===
+      rmse	0.010634
+```
+
+```bash
+for SEQ in V1_01_easy V1_02_medium V1_03_difficult V2_01_easy V2_02_medium V2_03_difficult; do
+  echo "=== $SEQ ==="
+  grep rmse $SEQ/ape_stats_sim3.txt 2>/dev/null
+done
+```
+```bash
+=== V1_01_easy ===
+      rmse	0.049059
+=== V1_02_medium ===
+      rmse	0.123500
+=== V1_03_difficult ===
+      rmse	0.118132
+=== V2_01_easy ===
+      rmse	0.192176
+=== V2_02_medium ===
+      rmse	2.256184
+=== V2_03_difficult ===
+      rmse	0.185936
+```
